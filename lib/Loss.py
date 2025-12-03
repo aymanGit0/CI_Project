@@ -1,5 +1,4 @@
 import numpy as np
-from Layers import Layer
 
 class MeanSquaredError:
     """
@@ -7,8 +6,13 @@ class MeanSquaredError:
     
     L = 1/(2N) * sum((Y_true - Y_pred)^2)
     """
+    def __init__(self):
+        self.diff = None  # To store (Y_pred - Y_true)
+        self.N = None     # To store batch size
+        self.Loss = None  # To store the loss value
+        self.Gradient = None # To store the gradient
 
-    def forward(self, Y_pred, Y_true):
+    def loss(self, Y_true, Y_pred):
         """
         Calculates the MSE loss.
         
@@ -23,10 +27,10 @@ class MeanSquaredError:
         self.N = Y_pred.shape[0]    # Batch size (N)
         
         # Loss = 1/(2N) * sum(diff^2)
-        loss = np.sum(self.diff**2) / (2 * self.N)
-        return loss
+        self.Loss = np.sum(self.diff**2) / (2 * self.N)
+        return self.Loss
 
-    def backward(self):
+    def gradient(self):
         """
         Calculates the initial gradient of the loss with respect to the prediction.
         
@@ -37,5 +41,5 @@ class MeanSquaredError:
         """
         # (Y_pred - Y_true) is stored as self.diff
         # dL/dY_pred = self.diff / self.N
-        grad_output = self.diff / self.N
-        return grad_output
+        self.Gradient = self.diff / self.N
+        return self.Gradient

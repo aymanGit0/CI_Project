@@ -1,5 +1,4 @@
 import numpy as np
-from Layers import Layer
 
 
 class SGD:

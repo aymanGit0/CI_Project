@@ -1,5 +1,6 @@
 import numpy as np
-from Layers import Layer
+from lib.Layers import Layer
+
 
 class Tanh(Layer):
     """Hyperbolic Tangent activation function."""
