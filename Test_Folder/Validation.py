@@ -7,7 +7,7 @@ sys.path.append(os.path.abspath('..'))
 from lib.Network import Network 
 from lib.Layers import Dense
 from lib.Activation import Tanh, Sigmoid
-from lib.Losse import MeanSquaredError
+from lib.Losse import MeanSquaredError as MSE
 from lib.Optimizer import SGD
 
 
