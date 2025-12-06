@@ -33,14 +33,10 @@ This repository contains a simple, modular, and purely NumPy-based implementatio
     - Gradient Checking: The framework includes tools (numerical_gradient) to verify the correctness of the analytical backpropagation against numerical approximations.
     
 * Installation and Setup
-  
+* 
     Since this framework is built entirely on standard Python libraries, setup is minimal.
-
-* Prerequisites
-
     You only need NumPy:
     pip install numpy
-
 
 * Repository Structure
     + lib/
@@ -56,15 +52,13 @@ This repository contains a simple, modular, and purely NumPy-based implementatio
     + report/
       - CI_Project_Milestone_1.pdf # Project documentation
               
-      
-
 * Usage Example (XOR Problem)
 
     The primary example demonstrating model instantiation, training, and testing (including the full XOR problem solution and gradient check) is located in the Jupyter notebook:
     
     notebook/project_demo.ipynb
     
-    * Quick API Preview
+    + Quick API Preview
     
         The setup follows this simple sequence:
         
@@ -85,9 +79,9 @@ This repository contains a simple, modular, and purely NumPy-based implementatio
         3. Train
         model.train(X_data, Y_true, EPOCHS)
     
+
+* Gradient Verification
+
+    To ensure the backpropagation implementation is correct, the framework is designed to pass the Gradient Check test, which compares the analytically calculated gradients (dL/dW from backward()) against the         numerically calculated gradients (using the Finite Difference Method).
     
-        Gradient Verification
-        
-        To ensure the backpropagation implementation is correct, the framework is designed to pass the Gradient Check test, which compares the analytically calculated gradients (dL/dW from backward()) against the         numerically calculated gradients (using the Finite Difference Method).
-        
-        The utility function numerical_gradient() is used within the project_demo.ipynb notebook to confirm numerical stability and correctness of all trainable parameters.
+    The utility function numerical_gradient() is used within the project_demo.ipynb notebook to confirm numerical stability and correctness of all trainable parameters.
