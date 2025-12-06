@@ -1,7 +1,8 @@
 import numpy as np
+from lib.Layers import Layer
 
 
-class SGD:
+class GD:
     """
     Stochastic Gradient Descent optimizer.
 
