@@ -1,4 +1,4 @@
-#Minimal Neural Network Framework (NumPy-based)
+# Minimal Neural Network Framework (NumPy-based)
 
 This repository contains a simple, modular, and purely NumPy-based implementation of a basic deep learning framework. It is designed for educational purposes to understand the fundamentals of Neural Networks, including the forward pass, backpropagation, and gradient-based optimization, without relying on high-level libraries like TensorFlow or PyTorch.
 
