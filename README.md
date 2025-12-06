@@ -33,7 +33,7 @@ This repository contains a simple, modular, and purely NumPy-based implementatio
     - Gradient Checking: The framework includes tools (numerical_gradient) to verify the correctness of the analytical backpropagation against numerical approximations.
     
 * Installation and Setup
-* 
+  
     Since this framework is built entirely on standard Python libraries, setup is minimal.
     You only need NumPy:
     pip install numpy
