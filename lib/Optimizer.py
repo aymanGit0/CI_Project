@@ -12,7 +12,7 @@ class GD:
     
     def __init__(self, learning_rate):
         """
-        Initialize the SGD optimizer.
+        Initialize the GD optimizer.
         
         Args:
             learning_rate (float): The step size (eta) for parameter updates.
@@ -44,4 +44,5 @@ class GD:
             if hasattr(layer, 'b') and hasattr(layer, 'db'):
                 # b_new = b_old - eta * db
                 layer.b -= eta * layer.db
+
 
