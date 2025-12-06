@@ -1,4 +1,4 @@
-Minimal Neural Network Framework (NumPy-based)
+#Minimal Neural Network Framework (NumPy-based)
 
 This repository contains a simple, modular, and purely NumPy-based implementation of a basic deep learning framework. It is designed for educational purposes to understand the fundamentals of Neural Networks, including the forward pass, backpropagation, and gradient-based optimization, without relying on high-level libraries like TensorFlow or PyTorch.
 
@@ -81,20 +81,20 @@ Quick API Preview
 The setup follows this simple sequence:
 
 from lib.Network import Network
-# ... imports for Dense, Tanh, Sigmoid, MSE, SGD
+... imports for Dense, Tanh, Sigmoid, MSE, SGD
 
-# 1. Instantiate the model
+1. Instantiate the model
 model = Network()
 model.add(Dense(2, 3)) 
 model.add(Tanh())
 model.add(Dense(3, 1))
 model.add(Sigmoid())
 
-# 2. Compile
+2. Compile
 model.compile(loss_instance=MeanSquaredError(), 
               optimizer_instance=SGD(learning_rate=0.1))
 
-# 3. Train
+3. Train
 model.train(X_data, Y_true, EPOCHS)
 
 
