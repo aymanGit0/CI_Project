@@ -27,7 +27,7 @@ XOR_Model.add(Sigmoid())   # Activation function for output (forces 0-1)
 # Create optimizer with learning rate 0.1 & Compile with MSE loss and our optimizer
 opt = GD(learning_rate=0.1)
 
-XOR_Model.compile(MSE, opt)
+XOR_Model.compile(MSE(), opt)
 #-------------------
 # Train for 10,000 epochs
 XOR_Model.train(X_data, Label,10000)
