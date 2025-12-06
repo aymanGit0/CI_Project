@@ -38,8 +38,8 @@ This repository contains a simple, modular, and purely NumPy-based implementatio
 
 * Prerequisites
 
-You only need NumPy:
-pip install numpy
+    You only need NumPy:
+    pip install numpy
 
 
 * Repository Structure
