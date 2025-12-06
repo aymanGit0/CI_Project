@@ -47,7 +47,7 @@ class Network:
             self.backward(grad)
             
             # 5. Optimizer Step
-            # Assuming your optimizer object (SGD) has a method named 'step'
+            # Assuming your optimizer object (GD) has a method named 'step'
             self.optimizer.step(self.layers)
 
             # Logging
