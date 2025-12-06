@@ -1,48 +1,59 @@
 class Network:
     def __init__(self):
         self.layers = []
-        self.loss = None  # holds the loss function
-        self.loss_gradient = None  # holds the loss gradient function
-        self.optimizer = None   
+        self.loss_fn = None  # Stores the MeanSquaredError instance
+        self.optimizer = None
 
     def add(self, layer):
+        """Adds a layer or activation function to the network."""
         self.layers.append(layer)
 
-    def compile(self, loss_class, optimizer):
-        self.loss = loss_class.loss  # stores the loss function 
-        self.loss_gradient = loss_class.gradient  # stores the loss gradient function
-        self.optimizer = optimizer # Stored as self.optimizer
-
-    def forward(self, input_data):
-        # The data must flow through the layers!
-        # Input -> Layer 1 -> Output -> Layer 2 -> Output...
+    def compile(self, loss_instance, optimizer_instance):
+        """Initializes the loss function instance and the optimizer instance."""
+        self.loss_fn = loss_instance
+        self.optimizer = optimizer_instance
+        print("Network compiled successfully.") 
+        
+    def forward(self, X):
+        """Performs the forward pass through all layers."""
         for layer in self.layers:
-            input_data = layer.forward(input_data)
-        return input_data
+            X = layer.forward(X)
+        return X
 
-    def backward(self, gradient):
-        # Update the gradient at every step
+    def backward(self, grad_output):
+        """
+        Performs the backward pass (backpropagation) through all layers,
+        starting with the initial gradient from the loss function.
+        """
         for layer in reversed(self.layers):
-            gradient = layer.backward(gradient)
-        return gradient
+            grad_output = layer.backward(grad_output)
+        return grad_output
 
     def train(self, x_train, y_train, iterations):
-        # Loop range was named 'iterations', passed as 'iterations'
+        if self.loss_fn is None or self.optimizer is None:
+            raise RuntimeError("Model not compiled. Call .compile() first.")
+
         for i in range(iterations):
             # 1. Forward Pass
             output = self.forward(x_train)
             
-            # 2. Calculate Error (Scoreboard)
-            error = self.loss(self,y_train, output)
+            # 2. Calculate Loss Value
+            error = self.loss_fn.loss(y_train, output)
             
-            # 3. Backward Pass
-            grad = self.loss_gradient(self)
+            # 3. Calculate Initial Gradient
+            grad = self.loss_fn.gradient()
+            
+            # 4. Backward Pass (Backpropagation)
             self.backward(grad)
             
-            # 4. Optimizer Step
-            # Now variable names match (self.optimizer)
+            # 5. Optimizer Step
+            # Assuming your optimizer object (SGD) has a method named 'step'
             self.optimizer.step(self.layers)
 
             # Logging
             if (i + 1) % 1000 == 0:
-                print(f"iteration {i+1}/{iterations}, Loss: {error}")
+                print(f"iteration {i+1}/{iterations}, Loss: {error:.8f}")
+
+        # Print final loss after the last iteration
+        # Recalculate output and loss one last time if desired, or just print the last recorded error.
+        print(f"iteration {iterations}/{iterations}, Final Loss: {error:.8f}")
