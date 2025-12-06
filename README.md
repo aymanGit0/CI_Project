@@ -5,32 +5,24 @@ This repository contains a simple, modular, and purely NumPy-based implementatio
 Features
 
 This framework allows users to define and train fully connected neural networks using a simple, Keras-like API.
-
-Core Components
-
-Component
-
-Description
-
-Network.py
-
-The main container class for the model. Handles stacking layers, compiling the model with loss/optimizer, and running the train, forward, and backward loops.
-
-layers.py
-
-Contains trainable layers, such as the Dense (fully connected) layer. Implements forward and backward methods for weight and bias updates.
-
-Activation.py
-
-Contains activation functions (e.g., Tanh, Sigmoid). Implements both the forward computation and the local gradient calculation.
-
-Loss.py
-
-Contains the loss function (e.g., MeanSquaredError). Implements the main loss calculation and the initial gradient for backpropagation.
-
-Optimizer.py
-
-Contains optimization algorithms (e.g., SGD - Stochastic Gradient Descent). Implements the step method to apply weight and bias updates based on calculated gradients.
+    1. Networkpy
+        The main container class for the model. Handles stacking layers, compiling the model with loss/optimizer, and running the train, forward, and backward loops.
+    
+    2. layers.py
+    
+        Contains trainable layers, such as the Dense (fully connected) layer. Implements forward and backward methods for weight and bias updates.
+    
+    3. Activation.py
+    
+        Contains activation functions (e.g., Tanh, Sigmoid). Implements both the forward computation and the local gradient calculation.
+    
+    4. Loss.py
+    
+        Contains the loss function (e.g., MeanSquaredError). Implements the main loss calculation and the initial gradient for backpropagation.
+    
+    5. Optimizer.py
+    
+        Contains optimization algorithms (e.g., SGD - Stochastic Gradient Descent). Implements the step method to apply weight and bias updates based on calculated gradients.
 
 Key Functionality
 
