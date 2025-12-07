@@ -22,7 +22,7 @@ This repository contains a simple, modular, and purely NumPy-based implementatio
     
     5. Optimizer.py
     
-        Contains optimization algorithms (e.g., SGD - Stochastic Gradient Descent). Implements the step method to apply weight and bias updates based on calculated gradients.
+        Contains optimization algorithms (e.g., GD - Gradient Descent). Implements the step method to apply weight and bias updates based on calculated gradients.
 
 * Key Functionality
 
@@ -63,7 +63,7 @@ This repository contains a simple, modular, and purely NumPy-based implementatio
         The setup follows this simple sequence:
         
         from lib.Network import Network
-        ... imports for Dense, Tanh, Sigmoid, MSE, SGD
+        ... imports for Dense, Tanh, Sigmoid, MSE, GD
         
         1. Instantiate the model
         model = Network()
@@ -74,7 +74,7 @@ This repository contains a simple, modular, and purely NumPy-based implementatio
         
         2. Compile
         model.compile(loss_instance=MeanSquaredError(), 
-                      optimizer_instance=SGD(learning_rate=0.1))
+                      optimizer_instance=GD(learning_rate=0.1))
         
         3. Train
         model.train(X_data, Y_true, EPOCHS)
