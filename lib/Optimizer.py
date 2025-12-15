@@ -1,48 +1,58 @@
 import numpy as np
-from lib.Layers import Layer
+import random
 
 
-class GD:
+class SGD:
     """
     Stochastic Gradient Descent optimizer.
 
-    Updates parameters (W, b) of layers using their gradients (dW, db)
-    and a defined learning rate (eta).
+    - Randomly selects ONE sample from data
+    - Performs forward, backward
+    - Updates parameters
     """
-    
+
     def __init__(self, learning_rate):
-        """
-        Initialize the GD optimizer.
-        
-        Args:
-            learning_rate (float): The step size (eta) for parameter updates.
-        """
         self.learning_rate = learning_rate
 
-    def step(self, layers):
+    def step(self, model, X, Y, loss_fn):
         """
-        Updates the parameters (W, b) for all trainable layers in the network.
-        
-        The update rule is: W_new = W_old - eta * (dL/dW)
-        
+        Perform ONE stochastic update step.
+
         Args:
-            layers (list): A list of Layer objects in the network.
+            model: neural network model (has forward, backward, layers)
+            X (np.ndarray): input data (N, ...)
+            Y (np.ndarray): target data (N, ...)
+            loss_fn: loss function object
         """
+
+        # 1. Pick ONE random sample
+        i = random.randint(0, len(X) - 1)
+        x = X[i:i+1]  # keep batch dimension
+        y = Y[i:i+1]
+
+        # 2. Zero gradients
+        for layer in model.layers:
+            if hasattr(layer, "dW"):
+                layer.dW = np.zeros_like(layer.W)
+            if hasattr(layer, "db"):
+                layer.db = np.zeros_like(layer.b)
+
+        # 3. Forward pass
+        y_pred = model.forward(x)
+
+        # 4. Compute loss
+        loss = loss_fn.loss(y, y_pred)
+
+        # 5. Backward pass
+        dL = loss_fn.gradient()
+        model.backward(dL)
+
+        # 6. Parameter update
         eta = self.learning_rate
-        
-        # Iterate over all layers provided by the Network/Sequential model
-        for layer in layers:
-            
-            # 1. Check for trainable weights (W and dW)
-            # This handles the Dense layer
-            if hasattr(layer, 'W') and hasattr(layer, 'dW'):
-                # W_new = W_old - eta * dW
+        for layer in model.layers:
+            if hasattr(layer, 'W'):
                 layer.W -= eta * layer.dW
-                
-            # 2. Check for trainable biases (b and db)
-            # This handles the Dense layer
-            if hasattr(layer, 'b') and hasattr(layer, 'db'):
-                # b_new = b_old - eta * db
+            if hasattr(layer, 'b'):
                 layer.b -= eta * layer.db
 
-
+        return loss

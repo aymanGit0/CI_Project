@@ -48,7 +48,7 @@ class Network:
             
             # 5. Optimizer Step
             # Assuming your optimizer object (GD) has a method named 'step'
-            self.optimizer.step(self.layers)
+            self.optimizer.step(self, x_train, y_train, self.loss_fn)
 
             # Logging
             if (i + 1) % 1000 == 0:
