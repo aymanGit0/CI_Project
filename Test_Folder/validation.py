@@ -8,7 +8,7 @@ from lib.Network import Network
 from lib.Layers import Dense
 from lib.Activation import Tanh, Sigmoid
 from lib.Loss import MeanSquaredError as MSE
-from lib.Optimizer import GD
+from lib.Optimizer import SGD
 
 
 #Creating the deta set:
@@ -25,7 +25,7 @@ XOR_Model.add(Dense(4, 1))
 XOR_Model.add(Sigmoid())   # Activation function for output (forces 0-1)
 #------------------
 # Create optimizer with learning rate 0.1 & Compile with MSE loss and our optimizer
-opt = GD(learning_rate=0.1)
+opt = SGD(learning_rate=0.1)
 
 XOR_Model.compile(MSE(), opt)
 #-------------------
