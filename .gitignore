@@ -14,7 +14,8 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+lib/tf_env
+tf_env
 lib64/
 parts/
 sdist/
