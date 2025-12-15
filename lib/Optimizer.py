@@ -11,48 +11,37 @@ class SGD:
     - Updates parameters
     """
 
-    def __init__(self, learning_rate):
+    def __init__(self, learning_rate,batch_size):
         self.learning_rate = learning_rate
+        self.batch_size=batch_size
 
-    def step(self, model, X, Y, loss_fn):
+    def step(self, model, X, Y, loss_fn,batch_size):
         """
-        Perform ONE stochastic update step.
-
-        Args:
-            model: neural network model (has forward, backward, layers)
-            X (np.ndarray): input data (N, ...)
-            Y (np.ndarray): target data (N, ...)
-            loss_fn: loss function object
+        Perform ONE mini-batch SGD update.
         """
+        self.batch_size=batch_size
+        N = len(X)
 
-        # 1. Pick ONE random sample
-        i = random.randint(0, len(X) - 1)
-        x = X[i:i+1]  # keep batch dimension
-        y = Y[i:i+1]
+        # 1. Sample a mini-batch
+        indices = np.random.choice(N, self.batch_size, replace=False)
+        x_batch = X[indices]
+        y_batch = Y[indices]    
 
-        # 2. Zero gradients
+        # 2. Forward pass
+        y_pred = model.forward(x_batch)
+
+        # 3. Compute loss
+        loss = loss_fn.loss(y_batch, y_pred)
+
+        # 4. Backward pass
+        grad = loss_fn.gradient()
+        model.backward(grad)
+
+        # 5. Parameter update
         for layer in model.layers:
-            if hasattr(layer, "dW"):
-                layer.dW = np.zeros_like(layer.W)
-            if hasattr(layer, "db"):
-                layer.db = np.zeros_like(layer.b)
-
-        # 3. Forward pass
-        y_pred = model.forward(x)
-
-        # 4. Compute loss
-        loss = loss_fn.loss(y, y_pred)
-
-        # 5. Backward pass
-        dL = loss_fn.gradient()
-        model.backward(dL)
-
-        # 6. Parameter update
-        eta = self.learning_rate
-        for layer in model.layers:
-            if hasattr(layer, 'W'):
-                layer.W -= eta * layer.dW
-            if hasattr(layer, 'b'):
-                layer.b -= eta * layer.db
+            if hasattr(layer, "W"):
+                layer.W -= self.learning_rate * layer.dW
+            if hasattr(layer, "b"):
+                layer.b -= self.learning_rate * layer.db
 
         return loss

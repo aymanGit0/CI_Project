@@ -1,15 +1,17 @@
+import numpy as np
+
 class Network:
     def __init__(self):
         self.layers = []
-        self.loss_fn = None  # Stores the MeanSquaredError instance
+        self.loss_fn = None
         self.optimizer = None
 
     def add(self, layer):
-        """Adds a layer or activation function to the network."""
+        """Adds a layer to the network."""
         self.layers.append(layer)
 
     def compile(self, loss_instance, optimizer_instance):
-        """Initializes the loss function instance and the optimizer instance."""
+        """Sets the loss function and optimizer."""
         self.loss_fn = loss_instance
         self.optimizer = optimizer_instance
         print("Network compiled successfully.") 
@@ -21,39 +23,32 @@ class Network:
         return X
 
     def backward(self, grad_output):
-        """
-        Performs the backward pass (backpropagation) through all layers,
-        starting with the initial gradient from the loss function.
-        """
+        """Performs the backward pass."""
         for layer in reversed(self.layers):
             grad_output = layer.backward(grad_output)
         return grad_output
 
-    def train(self, x_train, y_train, iterations):
+    # --- UPDATED TRAIN METHOD ---
+    def train(self, x_train, y_train, iterations, batch_size):
         if self.loss_fn is None or self.optimizer is None:
             raise RuntimeError("Model not compiled. Call .compile() first.")
+        
+        # Update the optimizer's batch size with the one passed here
+        if hasattr(self.optimizer, 'batch_size'):
+            self.optimizer.batch_size = batch_size
+
+        print_frequency = max(1, iterations // 10)
 
         for i in range(iterations):
-            # 1. Forward Pass
-            output = self.forward(x_train)
-            
-            # 2. Calculate Loss Value
-            error = self.loss_fn.loss(y_train, output)
-            
-            # 3. Calculate Initial Gradient
-            grad = self.loss_fn.gradient()
-            
-            # 4. Backward Pass (Backpropagation)
-            self.backward(grad)
-            
-            # 5. Optimizer Step
-            # Assuming your optimizer object (GD) has a method named 'step'
-            self.optimizer.step(self, x_train, y_train, self.loss_fn)
+            # We use the optimizer.step() to handle:
+            # 1. Mini-batch sampling
+            # 2. Forward pass
+            # 3. Backward pass
+            # 4. Weight updates
+            loss = self.optimizer.step(self, x_train, y_train, self.loss_fn, batch_size)
 
             # Logging
-            if (i + 1) % 1000 == 0:
-                print(f"iteration {i+1}/{iterations}, Loss: {error:.8f}")
+            if (i + 1) % print_frequency == 0 or (i + 1) == iterations: 
+                print(f"Iteration {i+1}/{iterations}, Loss: {loss:.8f}")
 
-        # Print final loss after the last iteration
-        # Recalculate output and loss one last time if desired, or just print the last recorded error.
-        print(f"iteration {iterations}/{iterations}, Final Loss: {error:.8f}")
+        print(f"Iteration {iterations}/{iterations}, Final Loss: {loss:.8f}")

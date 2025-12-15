@@ -73,3 +73,60 @@ class Dense(Layer):
         # grad_input = grad_output @ W^T
         grad_input = grad_output @ self.W.T  # shape (batch_size, in_features)
         return grad_input
+
+class Flatten(Layer):
+    """
+    Reshapes a 3D input (batch_size, H, W) to a 2D output (batch_size, H*W).
+    Needed for image data (e.g., 28x28) to be used by Dense layers.
+    """
+    def __init__(self):
+        self.input_shape = None
+
+    def forward(self, x):
+        """
+        Flattens the input image/tensor into a vector.
+        x shape: (batch_size, H, W) -> (N, H*W)
+        """
+        # Assuming input shape is (batch_size, H, W)
+        self.input_shape = x.shape
+        # -1 automatically calculates the total number of elements in the row (H*W)
+        return x.reshape(x.shape[0], -1) 
+
+    def backward(self, grad_output):
+        """
+        Reshapes the incoming gradient back to the original input shape.
+        grad_output shape: (N, H*W) -> (batch_size, H, W)
+        """
+        # Reshape the gradient back to the original shape
+        return grad_output.reshape(self.input_shape)
+
+
+class Reshape(Layer):
+    """
+    Reshapes the input tensor to a target shape.
+    Used for the Decoder output to return the image to its original (28, 28) shape.
+    """
+    def __init__(self, target_shape):
+        """
+        target_shape is the desired shape *after* the batch dimension.
+        e.g., (28, 28) for an MNIST image.
+        """
+        self.target_shape = target_shape
+        self.input_shape = None # Will store the batch-inclusive input shape
+
+    def forward(self, x):
+        """
+        x shape: (batch_size, features)
+        returns: (batch_size, target_shape[0], target_shape[1], ...)
+        """
+        self.input_shape = x.shape
+        # Prepend batch dimension (x.shape[0]) to the target shape
+        return x.reshape(x.shape[0], *self.target_shape)
+
+    def backward(self, grad_output):
+        """
+        Flattens the incoming gradient back to the 2D shape expected by the preceding layer.
+        grad_output shape: (batch_size, H, W) -> (N, H*W)
+        """
+        # Reshape the gradient back to the 2D shape it had before this layer
+        return grad_output.reshape(self.input_shape)

@@ -2,44 +2,44 @@ import numpy as np
 
 class MeanSquaredError:
     """
-    Mean Squared Error (MSE) loss function with 1/(2N) scaling.
-    
-    L = 1/(2N) * sum((Y_true - Y_pred)^2)
+    Mean Squared Error (MSE) loss function.
+    Robust to 2D (N, 784) and 3D (N, 28, 28) inputs.
     """
     def __init__(self):
-        self.diff = None  # To store (Y_pred - Y_true)
-        self.N = None     # To store batch size
-        self.Loss = None  # To store the loss value
-        self.Gradient = None # To store the gradient
+        self.diff = None 
+        self.N = None 
+        self.F = None    
+        self.Loss = None
+        self.grad = None
 
     def loss(self, Y_true, Y_pred):
         """
-        Calculates the MSE loss.
-        
-        Args:
-            Y_pred (np.ndarray): The network's prediction.
-            Y_true (np.ndarray): The true target values.
-            
-        Returns:
-            float: The scalar loss value.
+        Calculates the MSE loss and STORES self.diff for gradient calculation.
         """
-        self.diff = Y_pred - Y_true # (Y_pred - Y_true)
-        self.N = Y_pred.shape[0]    # Batch size (N)
+        # 1. Store the difference (Crucial for gradient step)
+        self.diff = Y_pred - Y_true
         
-        # Loss = 1/(2N) * sum(diff^2)
-        self.Loss = np.sum(self.diff**2) / (2 * self.N)
+        # 2. Get dimensions robustly
+        self.N = Y_pred.shape[0]
+        # Calculate features (F) as product of remaining dimensions
+        self.F = np.prod(Y_pred.shape[1:])
+
+        # 3. Compute scalar loss
+        squared_diff = self.diff ** 2
+        total_elements = self.N * self.F 
+        
+        self.Loss = np.sum(squared_diff) / (2 * total_elements)
         return self.Loss
 
     def gradient(self):
         """
-        Calculates the initial gradient of the loss with respect to the prediction.
-        
-        dL / dY_pred = 1/N * (Y_pred - Y_true)
-        
-        Returns:
-            np.ndarray: The gradient dL/dY_pred, with shape identical to Y_pred.
+        Calculates dL/dY_pred using the stored self.diff.
         """
-        # (Y_pred - Y_true) is stored as self.diff
-        # dL/dY_pred = self.diff / self.N
-        self.Gradient = self.diff / self.N
-        return self.Gradient
+        if self.diff is None:
+            raise RuntimeError("Must call .loss() before .gradient() to store the error term.")
+
+        total_elements = self.N * self.F
+        
+        # Gradient = (Y_pred - Y_true) / (N * F)
+        self.grad = self.diff / total_elements 
+        return self.grad
