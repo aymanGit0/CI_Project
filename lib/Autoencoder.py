@@ -1,8 +1,8 @@
-from Layers import Dense, Flatten, Reshape
-from Activation import ReLU, Sigmoid, Tanh
-from Loss import MeanSquaredError
-from Optimizer import SGD
-from Network import Network
+from lib.Layers import Dense, Flatten, Reshape
+from lib.Activation import ReLU, Sigmoid, Tanh
+from lib.Loss import MeanSquaredError
+from lib.Optimizer import SGD
+from lib.Network import Network
 
 # --- UPDATED ARCHITECTURE CLASSES ---
 
